@@ -1,1 +1,1 @@
-{"root":["./src/index.ts","./src/model.ts","./src/prompts.ts","./src/utils/constants.ts","./src/utils/markdown.ts","./src/utils/stripindent.ts"],"version":"5.7.3"}
+{"root":["./src/index.ts","./src/model.ts","./src/prompts.ts","./src/defaults/node.ts","./src/defaults/react.ts","./src/utils/constants.ts","./src/utils/markdown.ts","./src/utils/stripindent.ts"],"version":"5.7.3"}

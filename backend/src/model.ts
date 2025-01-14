@@ -1,7 +1,6 @@
-import dotenv from "dotenv";
-dotenv.config();
 import readline from "readline";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { getSystemPrompt } from "./prompts";
 
 const genAI = new GoogleGenerativeAI("AIzaSyDU5BxWQnYzBy-jQ-bswoZIlKXV4ISTUtY");
 
@@ -18,13 +17,14 @@ export async function generate() {
   const chat = model.startChat({
     history: [], // Start with an empty history
     generationConfig: {
-      maxOutputTokens: 500,
+      maxOutputTokens: 5000,
     },
   });
 
   // Store conversation history
-  const conversationHistory: { user: string; ai: string }[] = [];
-
+  let conversationHistory: { user: string; ai: string }[] = [
+    { user: "System", ai: getSystemPrompt() }, // Initial system prompt
+  ];
   // Function to get user input and send it to the model using streaming
   async function askAndRespond() {
     if (!isAwaitingResponse) {

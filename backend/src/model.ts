@@ -14,7 +14,6 @@ const rl = readline.createInterface({
 
 let isAwaitingResponse = false; // Flag to indicate if we're waiting for a response
 
-// Initialize conversation history with the system prompt
 let conversationHistory: string[] = [
   `System: ${getSystemPrompt()}`, // Include the system prompt at the start
 ];

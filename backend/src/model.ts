@@ -19,7 +19,7 @@ let conversationHistory: string[] = [
 ];
 
 export async function generate() {
-  const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
   const chat = model.startChat({
     history: [], // Start with an empty history

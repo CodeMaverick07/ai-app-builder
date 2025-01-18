@@ -76,20 +76,21 @@ app.post("/chat", async (req, res) => {
     const userMessage = req.body.messages;
     console.log(req.body);
 
-    conversationHistory.push({
-      role: "user",
-      parts: [{ text: userMessage }],
+    userMessage.forEach((message: { role: string; content: string }) => {
+      conversationHistory.push({
+        role: message.role,
+        parts: [{ text: message.content }],
+      });
     });
+    console.log("conversationHistory :", conversationHistory);
 
     const chat = model.startChat({ history: conversationHistory });
 
-    const result = await chat.sendMessage(userMessage);
+    const result = await chat.sendMessage(
+      conversationHistory[conversationHistory.length - 1].parts[0].text
+    );
 
     const aiResponse = result.response.text();
-    conversationHistory.push({
-      role: "model",
-      parts: [{ text: aiResponse }],
-    });
 
     res.json({
       response: aiResponse,

@@ -6,10 +6,8 @@ import { BASE_PROMPT, getSystemPrompt } from "./prompts";
 import { basePrompt as nodeBasePrompt } from "./defaults/node";
 import { basePrompt as reactBasePrompt } from "./defaults/react";
 
-// Initialize Google Generative AI with API key
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY as string);
 
-// Create a model instance with system instruction
 const model = genAI.getGenerativeModel({
   model: "gemini-1.5-flash",
   systemInstruction: getSystemPrompt(),
@@ -19,15 +17,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Store conversation history for chat
 let conversationHistory: { role: string; parts: { text: string }[] }[] = [];
 
-// Template endpoint to decide between "node" or "react"
 app.post("/template", async (req, res) => {
   try {
     const prompt = req.body.prompt;
 
-    // Generate content using Gemini API
     const response = await model.generateContent({
       contents: [
         {
@@ -45,7 +40,7 @@ app.post("/template", async (req, res) => {
       },
     });
 
-    const answer = response.response.text().trim().toLowerCase(); // Extract response
+    const answer = response.response.text().trim().toLowerCase();
     console.log(answer);
 
     if (answer === "react") {
@@ -76,25 +71,20 @@ app.post("/template", async (req, res) => {
   }
 });
 
-// Chat endpoint to handle multi-turn conversations
 app.post("/chat", async (req, res) => {
   try {
     const userMessage = req.body.messages;
     console.log(req.body);
 
-    // Add user message to conversation history
     conversationHistory.push({
       role: "user",
       parts: [{ text: userMessage }],
     });
 
-    // Initialize chat with history
     const chat = model.startChat({ history: conversationHistory });
 
-    // Generate response from the AI
     const result = await chat.sendMessage(userMessage);
 
-    // Add AI's response to the conversation history
     const aiResponse = result.response.text();
     conversationHistory.push({
       role: "model",
@@ -102,7 +92,7 @@ app.post("/chat", async (req, res) => {
     });
 
     res.json({
-      response: aiResponse, // Return AI's response
+      response: aiResponse,
     });
   } catch (error) {
     console.error("Error in /chat:", error);
@@ -110,7 +100,6 @@ app.post("/chat", async (req, res) => {
   }
 });
 
-// Start the server
 app.listen(3000, () => {
   console.log("Server is running on http://localhost:3000");
 });
